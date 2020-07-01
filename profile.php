@@ -32,7 +32,7 @@ if(!isset($_SESSION['user'])){
                        </div>
                    </div>
                    <div class="col-lg-9 mt-5">
-                       <h4 class="mt-5 text-uppercase text-dark font-weight-bold pt-5">Sadique Hussain</h4>
+                       <h4 class="mt-5 text-uppercase text-dark font-weight-bold pt-5"><?= $user[0]['name'];?></h4>
                    </div>
                    </div>
                </div>
@@ -50,19 +50,35 @@ if(!isset($_SESSION['user'])){
                             <div class="card-header">
                                 <h6>Write Tweet</h6>
                             </div>
-                            <div class="card-body pt-0 pl-0 pr-0 m-0">
-                               <textarea name="" id="" cols="30" rows="5" class="form-control"></textarea>
-                               <input type="submit" value="Tweet" class="btn btn-primary mt-3 float-right">
-                           </div>
+                            <form action="profile.php" method="post">                           
+                              
+                                <div class="card-body pt-0 pl-0 pr-0 m-0">
+                                   <textarea name="tweet_content" id="" cols="30" rows="5" class="form-control"></textarea>
+                                   <input type="submit" value="Tweet" class="btn btn-primary mt-3 float-right" name="tweet">
+                               </div>
+                               
+                           </form>
                        </div>
                            </div>
                        </div>
                        
-                       <div class="card mb-4">
+                       <?php 
+                       $result = $data->callingDataJoin(
+                           "tweets",
+                           "accounts",
+                           "tweets.tweet_by=accounts.id ORDER BY tweet_id DESC"
+                       );
+                       
+                       foreach($result as $tweet):
+                       ?>
+                       
+                        <div class="card mb-4">
                            <div class="card-body">
-                               <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deleniti numquam, magni officia expedita atque, praesentium! Accusamus saepe repellendus dolorem minima commodi assumenda cum hic dolor, iusto, ad repellat aliquam, quia!</p>
+                              <h6><?= $tweet['name'];?></h6>
+                               <p><?= $tweet['tweet_content'];?></p>
                            </div>
                        </div>
+                       <?php endforeach;?>
                    </div>
                </div>
            </div>
@@ -74,3 +90,25 @@ if(!isset($_SESSION['user'])){
    	<?php include_once("include/footer.php");?> 
     </body>
 </html>
+
+
+
+<?php
+
+if(isset($_POST['tweet'])){
+    $userid = $data->GetUserId();
+    $fields =  array(
+        'tweet_by' => $userid[0]['id'],
+        'tweet_status'=>1,
+        'tweet_content'=>$_POST['tweet_content']
+    );
+    
+    $data->insertData("tweets",$fields);
+    
+    $data->redirect("profile");
+    
+}
+?>
+
+
+

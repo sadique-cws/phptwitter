@@ -1,3 +1,6 @@
+<?php 
+$user = $data->getUserid();
+?>
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
 	<div class="container">
 		<a href="" class="navbar-brand">Twitter</a>
@@ -12,7 +15,7 @@
             if(isset($_SESSION['user'])):?>
                 <li class="nav-item">
                     <a  href="profile.php" class="btn btn-outline-light">hi, 
-                        <?= $_SESSION['user'];?>
+                    <?= $user[0]['name'];?>
                     </a>
                 </li>
 

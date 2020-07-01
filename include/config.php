@@ -55,11 +55,43 @@ class Datawork extends Connection{
             $query = "SELECT * FROM $table";
         }
         
-        while($row = $this->dbc->fetch_array($query)){
+        $result = $this->dbc->query($query);
+        
+        while($row = $result->fetch_array()){
             $array[] = $row;
         }
         return $array;
 	}
+    
+    
+    public function callingDataJoin($table1,$table2,$on,$cond=null){
+		$array = array();
+        
+        if($cond!=null){
+            $query = "SELECT * FROM $table1 JOIN $table2 ON $on where $cond";
+        }
+        else{
+            $query = "SELECT * FROM $table1 JOIN $table2 ON $on";
+        }
+        
+        $result = $this->dbc->query($query);
+        
+        while($row = $result->fetch_array()){
+            $array[] = $row;
+        }
+        return $array;
+	}
+    
+    
+    public function GetUserId(){
+        if(isset($_SESSION['user'])){
+            $log = $_SESSION['user'];
+            $userid = $this->callingData("accounts","email='$log'");
+            
+            return $userid;
+            
+        }
+    }
 	
     public function CheckData($table,$cond){
         
