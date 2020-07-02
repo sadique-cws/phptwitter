@@ -1,4 +1,6 @@
-<?php include_once("include/config.php");?> 
+<?php include_once("include/config.php"); 
+
+?> 
 
 <?php 
 if(!isset($_SESSION['user'])){
@@ -74,7 +76,18 @@ if(!isset($_SESSION['user'])){
                        
                         <div class="card mb-4">
                            <div class="card-body">
-                              <h6><?= $tweet['name'];?></h6>
+                              <h6 class="float-left"><?= $tweet['name'];?></h6>
+                              <div class="dropleft float-right">
+                                  
+                                  <a href="#" type="button" class="dropdown-toggle" data-toggle="dropdown"></a>
+                                  
+                                  <div class="dropdown-menu">
+                                      <a href="" class="dropdown-item small">edit</a>
+   <a href="profile.php?del_tweet=<?= $tweet['tweet_id'];?>" class="dropdown-item small">Delete</a>
+                                  </div>
+                                  
+                              </div>
+                              <div class="clearfix"></div>
                                <p><?= $tweet['tweet_content'];?></p>
                            </div>
                        </div>
@@ -88,6 +101,7 @@ if(!isset($_SESSION['user'])){
    
    
    	<?php include_once("include/footer.php");?> 
+
     </body>
 </html>
 
@@ -108,7 +122,18 @@ if(isset($_POST['tweet'])){
     $data->redirect("profile");
     
 }
+
+
+if(isset($_GET['del_tweet'])){
+    $id = $_GET['del_tweet'];
+    
+    if($data->deleteData("tweets"," tweet_id='$id'")){
+        $_SESSION['msg'] = "tweet Deleted Successfully";
+        $data->alert('profile');
+    }  
+}
+
+
+
+
 ?>
-
-
-

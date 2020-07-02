@@ -109,13 +109,32 @@ class Datawork extends Connection{
         
     }
     
-	public function deleteData($query){
-		
+	public function deleteData($table,$cond){
+		$data  = $this->dbc->query("DELETE FROM $table where $cond");
+        
+        if($data){
+            return true;
+        }
+        else{
+            return false;
+        }
 	}
 	
 	public function updateData($query){
 		
 	}
+    
+    public function alert($redirect){
+        
+        if($_SESSION['msg']!=""){
+            $msg = addslashes($_SESSION['msg']);
+            echo "<script type='text/javascript'>toastr.success('$msg')</script>";
+            unset($_SESSION['msg']);
+            
+            //$this->redirect($redirect);
+        }
+        
+    }
 	
 }
 

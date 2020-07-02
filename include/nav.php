@@ -1,7 +1,7 @@
 <?php 
 $user = $data->getUserid();
 ?>
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
 	<div class="container">
 		<a href="" class="navbar-brand">Twitter</a>
 		
@@ -27,3 +27,5 @@ $user = $data->getUserid();
 		</ul>
 	</div>
 </nav> 
+
+<div class="pt-4"></div>
