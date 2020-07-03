@@ -120,12 +120,14 @@ class Datawork extends Connection{
         }
 	}
 	
-	public function updateData($query){
-		
+	public function updateData($table,$fields,$where){
+		$query = "update $table SET $fields WHERE $where";
+        $result = $this->dbc->query($query);
+        
+        return $result;
 	}
     
     public function alert($redirect){
-        
         if($_SESSION['msg']!=""){
             $msg = addslashes($_SESSION['msg']);
             echo "<script type='text/javascript'>toastr.success('$msg')</script>";
@@ -135,7 +137,8 @@ class Datawork extends Connection{
         }
         
     }
-	
+    
+   
 }
 
 // object creation

@@ -5,7 +5,7 @@ $user = $data->getUserid();
 	<div class="container">
 		<a href="" class="navbar-brand">Twitter</a>
 		
-		<form  class="d-flex mx-auto" action="" method="post">
+		<form  class="d-flex mx-auto" action="search.php" method="get">
 		    <input type="search" name="search" size="70" placeholder="Search People, Post, and More" class="form-control form-control-sm">
 		    <input type="submit" name="find" class="btn btn-success btn-sm">
 		</form>
