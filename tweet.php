@@ -18,57 +18,19 @@ if(!isset($_SESSION['user'])){
 <body>
 	<?php include_once("include/nav.php");?> 
    
-   <div class="container mt-4">
+   <div class="container mt-5">
        <div class="row">
-           <div class="col-lg-12">
-              <!-- cover image -->
-               <div style="background-image:url('image/cover.png');height:300px">
-                
-               </div>
-               
-               <div class="container px-5" style="margin-top:-200px;background:linear-gradient(rgba(255, 255, 255, 0),rgba(255, 255, 255, 0.67),white)">
-                  <div class="row">
-                   <div class="col-lg-3">
-                       <div class="card">
-                           <img src="image/dp.jpg" class="card-img-top" alt="">
-                       </div>
-                   </div>
-                   <div class="col-lg-9 mt-5">
-                       <h4 class="mt-5 text-uppercase text-dark font-weight-bold pt-5"><?= $user[0]['name'];?></h4>
-                   </div>
-                   </div>
-               </div>
-               
-               
-               <div class="row">
+          
                    <div class="col-lg-6">
-                       <h2>Trending</h2>
-                       
-                   </div>
-                   <div class="col-lg-6">
-                       <div class="row">
-                           <div class="col-lg-12">
-                               <div class="card mb-4">
-                            <div class="card-header">
-                                <h6>Write Tweet</h6>
-                            </div>
-                            <form action="profile.php" method="post">                           
-                              
-                                <div class="card-body pt-0 pl-0 pr-0 m-0">
-                                   <textarea name="tweet_content" id="" cols="30" rows="5" class="form-control"></textarea>
-                                   <input type="submit" value="Tweet" class="btn btn-primary mt-3 float-right" name="tweet">
-                               </div>
-                               
-                           </form>
-                       </div>
-                           </div>
-                       </div>
                        
                        <?php 
+                       if(isset($_GET['tweet_id'])){
+                           $id = $_GET['tweet_id'];
+                       
                        $result = $data->callingDataJoin(
                            "tweets",
                            "accounts",
-                           "tweets.tweet_by=accounts.id ORDER BY tweet_id DESC"
+                           "tweets.tweet_by=accounts.id WHERE tweets.tweet_id='$id'"
                        );
                        
                        foreach($result as $tweet):
@@ -76,9 +38,7 @@ if(!isset($_SESSION['user'])){
                        
                         <div class="card mb-4">
                            <div class="card-body">
-                              <h6 class="float-left">
-                                  <a href="tweet.php?tweet_id=<?= $tweet['tweet_id'];?>"><?= $tweet['name'];?></a>
-                              </h6>
+                              <h6 class="float-left"><?= $tweet['name'];?></h6>
                               <div class="dropleft float-right">
                                   
                                   <a href="#" type="button" class="dropdown-toggle" data-toggle="dropdown"></a>
@@ -92,7 +52,32 @@ if(!isset($_SESSION['user'])){
                               <div class="clearfix"></div>
                                <p><?= $tweet['tweet_content'];?></p>
                            </div>
+                           <div class="card-footer">
+                               <form class="d-flex" method="post">
+                                   <input type="text" class="form-control" name="retweet_content">
+                                   <input type="submit" class="btn btn-primary" name="retweet">
+                               </form>
+                               
+                               <?php 
+                             $retweets = $data->callingDataJoin(
+                           "retweets",
+                           "accounts",
+                           "retweets.retweet_by=accounts.id WHERE retweets.tweet_id='$id'"
+                       );
+                       
+                       foreach($retweets as $retweet):
+                           ?>
+                               <div class="card mt-2">
+                                   <div class="card-body">
+                                       <h6><?= $retweet['name'];?></h6>
+                                       <p class="small"><?= $retweet['retweet_content'];?></p>
+                                   </div>
+                               </div>
+                                <?php endforeach;?>
+                           </div>
                        </div>
+                       
+                      
                        
                        <!-- edit work start-->
                        
@@ -126,58 +111,37 @@ if(!isset($_SESSION['user'])){
                        <!-- edit work end-->
                        
                        
-                       <?php endforeach;?>
+                       <?php endforeach;
+                       
+                       }
+                       ?>
                    </div>
                </div>
-           </div>
+          
        </div>
-   </div>
    
    
    
    	<?php include_once("include/footer.php");?> 
 
-    </body>
+   </body>
 </html>
 
-
-
-<?php
-
-if(isset($_POST['tweet'])){
-    $userid = $data->GetUserId();
-    $fields =  array(
-        'tweet_by' => $userid[0]['id'],
-        'tweet_status'=>1,
-        'tweet_content'=>$_POST['tweet_content']
-    );
+<?php 
+if(isset($_POST['retweet'])){
+    $user = $data->GetUserId();
+    $retweet_content = $_POST['retweet_content'];
+    $user_id = $user[0]['id'];
+    $tweet_id = $_GET['tweet_id'];
     
-    $data->insertData("tweets",$fields);
+    $fields = [
+        'retweet_by' => $user_id,
+        'retweet_content' => $retweet_content,
+        'tweet_id' => $tweet_id
+    ];
     
-    $data->redirect("profile");
-    
-}
-
-
-if(isset($_GET['del_tweet'])){
-    $id = $_GET['del_tweet'];
-    
-    if($data->deleteData("tweets"," tweet_id='$id'")){
-        $_SESSION['msg'] = "tweet Deleted Successfully";
-        $data->alert('profile');
-    }  
-}
-
-
-//update work
-
-if(isset($_POST['edit_tweet'])){
-    $id = $_POST['id'];
-    $content = $_POST['tweet_content'];
-    
-    $data->updateData("tweets", " tweet_content='$content'", " tweet_id='$id'");
-    
-    $data->redirect('profile');
+    $data->insertData('retweets',$fields);
+    echo "<script>window.open('tweet.php?tweet_id=$tweet_id','_self')</script>";
 
 }
 ?>
