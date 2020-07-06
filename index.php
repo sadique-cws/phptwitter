@@ -63,13 +63,21 @@ if(isset($_SESSION['user'])){
 
 <?php
 if(isset($_POST['signup'])){
+    
+    $dp = $_FILES['dp']['name'];
+    
+    $dp_tmp = $_FILES['dp']['tmp_name'];
+    
 	$fields= [
 		'name'=>$_POST['name'],
 		'contact'=>$_POST['contact'],
 		'email'=>$_POST['email'],
 		'dob'=>$_POST['dob'],
+        'dp' => $dp,
 		'password'=> md5($_POST['password'])
 	];
+    
+    move_uploaded_file($dp_tmp,"image/$dp");
     
 	if($data->insertData("accounts",$fields)){
         $_SESSION['user'] = $_POST['email'];

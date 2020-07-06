@@ -51,6 +51,11 @@ if(!isset($_SESSION['user'])){
                               </div>
                               <div class="clearfix"></div>
                                <p><?= $tweet['tweet_content'];?></p>
+                                <?php if($tweet['tweet_image']!=""): ?>
+
+                           <img src='image/tweet/<?= $tweet['tweet_image'];?>' class="w-100">
+
+                       <?php endif;?>
                            </div>
                            <div class="card-footer">
                                <form class="d-flex" method="post">
@@ -71,6 +76,8 @@ if(!isset($_SESSION['user'])){
                                    <div class="card-body">
                                        <h6><?= $retweet['name'];?></h6>
                                        <p class="small"><?= $retweet['retweet_content'];?></p>
+                                       
+                                       
                                    </div>
                                </div>
                                 <?php endforeach;?>

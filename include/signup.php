@@ -12,9 +12,9 @@
         </button>
       </div>
       <div class="modal-body">
-        <form action="index.php" method="post">
+        <form action="index.php" method="post" enctype="multipart/form-data">
         	<div class="mb-3">
-        	     <label for="">Nmae</label>
+        	     <label for="">Name</label>
         		<input type="text" name="name" class="form-control">
         	</div>
         	<div class="mb-3">
@@ -28,6 +28,10 @@
         	<div class="mb-3">
         	     <label for="">DOB</label>
         		<input type="date" name="dob" class="form-control">
+        	</div>
+        	<div class="mb-3">
+        	     <label for="">dp</label>
+        		<input type="file" name="dp" class="form-control">
         	</div>
         	<div class="mb-3">
         	     <label for="">password</label>

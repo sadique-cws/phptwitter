@@ -30,7 +30,7 @@ if(!isset($_SESSION['user'])){
                   <div class="row">
                    <div class="col-lg-3">
                        <div class="card">
-                           <img src="image/dp.jpg" class="card-img-top" alt="">
+                           <img src="<?= "image/". $user[0]['dp'];?>" class="card-img-top" alt="">
                        </div>
                    </div>
                    <div class="col-lg-9 mt-5">
@@ -52,11 +52,14 @@ if(!isset($_SESSION['user'])){
                             <div class="card-header">
                                 <h6>Write Tweet</h6>
                             </div>
-                            <form action="profile.php" method="post">                           
+                            <form action="profile.php" method="post" enctype="multipart/form-data">                           
                               
                                 <div class="card-body pt-0 pl-0 pr-0 m-0">
                                    <textarea name="tweet_content" id="" cols="30" rows="5" class="form-control"></textarea>
-                                   <input type="submit" value="Tweet" class="btn btn-primary mt-3 float-right" name="tweet">
+                                   
+                                   <input type="file" class=" mt-3 ml-3 float-left" name="tweet_image">
+                                   
+                                   <input type="submit" value="Tweet" class="btn btn-primary mt-3 float-right mr-3" name="tweet">
                                </div>
                                
                            </form>
@@ -91,6 +94,14 @@ if(!isset($_SESSION['user'])){
                               </div>
                               <div class="clearfix"></div>
                                <p><?= $tweet['tweet_content'];?></p>
+                               
+                       <?php if($tweet['tweet_image']!=""): ?>
+
+                           <img src='image/tweet/<?= $tweet['tweet_image'];?>' class="w-100">
+
+                       <?php endif;?>
+                               
+                               
                            </div>
                        </div>
                        
@@ -146,11 +157,18 @@ if(!isset($_SESSION['user'])){
 
 if(isset($_POST['tweet'])){
     $userid = $data->GetUserId();
+    
+    $tweet_image = $_FILES['tweet_image']['name'];
+    $tmp_img = $_FILES['tweet_image']['tmp_name'];
+    
     $fields =  array(
         'tweet_by' => $userid[0]['id'],
         'tweet_status'=>1,
+        'tweet_image' => $tweet_image,
         'tweet_content'=>$_POST['tweet_content']
     );
+    
+    move_uploaded_file($tmp_img,"image/tweet/$tweet_image");
     
     $data->insertData("tweets",$fields);
     
